@@ -17,7 +17,6 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '@/state';
 import Select from '@/app/components/generic/Select';
 import { NameType, ValueType } from 'recharts/types/component/DefaultTooltipContent';
-import { toJS } from 'mobx';
 import { useTheme } from 'next-themes';
 import equipmentStats from '@/public/img/Equipment Stats.png';
 import SectionAccordion from '@/app/components/generic/SectionAccordion';
@@ -79,7 +78,7 @@ const LoadoutComparison: React.FC = observer(() => {
   const store = useStore();
   const { monster } = store;
   const { showLoadoutComparison } = store.prefs;
-  const loadouts = toJS(store.loadouts);
+  const loadouts = JSON.stringify(store.loadouts);
 
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
@@ -124,7 +123,7 @@ const LoadoutComparison: React.FC = observer(() => {
     const req: CompareRequest = {
       type: WorkerRequestType.COMPARE,
       data: {
-        loadouts,
+        loadouts: JSON.parse(loadouts),
         monster,
         axes: {
           x: xAxisType.value,
@@ -137,7 +136,7 @@ const LoadoutComparison: React.FC = observer(() => {
     }).catch((e: unknown) => {
       console.error('[LoadoutComparison] Failed to compute compare results', e);
     });
-  }, [showLoadoutComparison, loadouts, monster, xAxisType, yAxisType]);
+  }, [showLoadoutComparison, loadouts, monster, xAxisType, yAxisType, calc]);
 
   const [tickCount, domainMax] = useMemo(() => {
     if (!compareResult?.domainMax) {
