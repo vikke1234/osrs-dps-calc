@@ -41,6 +41,7 @@ import {
 import { UserIssue } from '@/types/State';
 import BaseCalc, { CalcOpts, InternalOpts } from '@/lib/BaseCalc';
 import { scaleMonsterHpOnly } from '@/lib/MonsterScaling';
+import dClawDist from '@/lib/distributions/dclaws';
 
 /**
  * Class for computing various player-vs-NPC metrics.
@@ -713,6 +714,12 @@ export default class PlayerVsNPCCalc extends BaseCalc {
       return new AttackDistribution([
         HitDistribution.single(1.0, this.monster.skills.hp),
       ]);
+    }
+
+    if (this.player.usingSpecialAttack) {
+      if (this.wearing('Dragon claws')) {
+        dist = dClawDist(acc, max);
+      }
     }
 
     if (this.isUsingMeleeStyle() && this.isWearingFang()) {

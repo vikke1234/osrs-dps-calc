@@ -6,6 +6,7 @@ import SpellSelect from '@/app/components/player/combat/SpellSelect';
 import Toggle from '@/app/components/generic/Toggle';
 import SpellContainer from '@/app/components/player/combat/SpellContainer';
 import UserIssueWarning from '@/app/components/generic/UserIssueWarning';
+import { SPECIAL_ATTACK_WEAPONS } from '@/lib/Equipment';
 
 const Combat: React.FC = observer(() => {
   const store = useStore();
@@ -13,11 +14,26 @@ const Combat: React.FC = observer(() => {
   // eslint-disable-next-line react/no-array-index-key
   const styles = useMemo(() => store.availableCombatStyles.map((s, i) => <CombatStyle key={i} style={s} />), [store.availableCombatStyles]);
 
+  const weapon = store.equipmentData.weapon;
+  const weaponHasSpecialAttack = useMemo(() => SPECIAL_ATTACK_WEAPONS.includes(weapon?.id || -1), [weapon]);
+  const weaponHasSpecialAttackUnimplemented = useMemo(() => SPECIAL_ATTACK_WEAPONS.includes(weapon?.id || -1), [weapon]);
+
   // Determine whether there's any issues with spells
   const spellIssues = useMemo(() => store.userIssues.filter((i) => i.type.startsWith('spell_') && i.loadout === `${store.selectedLoadout + 1}`), [store.userIssues, store.selectedLoadout]);
 
   return (
     <div>
+      <div className="flex flex-col my-4">
+        {
+          weaponHasSpecialAttack && (
+            <Toggle
+              checked={store.player.usingSpecialAttack}
+              setChecked={(v) => store.updatePlayer({ usingSpecialAttack: v })}
+              label="Using Special Attack"
+            />
+          )
+        }
+      </div>
       <div className="flex flex-col my-4">
         {styles}
       </div>

@@ -20,6 +20,14 @@ export const availableEquipment = equipment as EquipmentPiece[];
  */
 export const equipmentAliases = generatedEquipmentAliases as { [key: number]: number[] };
 
+export const SPECIAL_ATTACK_WEAPONS: number[] = [
+  13652, // Dragon claws
+];
+
+export const UNIMPLEMENTED_SPECIAL_ATTACK_WEAPONS: number[] = [
+  // todo
+];
+
 const commonAmmoCategories = () => {
   const ret: { [k: string]: number[] } = {
     bow_t1: [

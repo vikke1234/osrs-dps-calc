@@ -1,7 +1,9 @@
 import { EquipmentPiece, Player } from '@/types/Player';
 import { Monster } from '@/types/Monster';
-import { keys } from '@/utils';
-import { AmmoApplicability, ammoApplicability, getCanonicalItem } from '@/lib/Equipment';
+import { keys, typedMerge } from '@/utils';
+import {
+  AmmoApplicability, ammoApplicability, getCanonicalItem, SPECIAL_ATTACK_WEAPONS,
+} from '@/lib/Equipment';
 import UserIssueType from '@/enums/UserIssueType';
 import { MonsterAttribute } from '@/enums/MonsterAttribute';
 import { CAST_STANCES } from '@/lib/constants';
@@ -557,6 +559,18 @@ export default class BaseCalc {
         ...this.player,
         spell: null,
       };
+    }
+
+    // If we're using a special attack, override a whole bunch of props relevant to that spec
+    // we do this per-weapon instead of overwriting *everything* since some specs are variant on other inputs
+    if (this.player.usingSpecialAttack) {
+      if (!eq.weapon || !SPECIAL_ATTACK_WEAPONS.includes(eq.weapon.id)) {
+        // make sure the weapon actually has a spec that is implemented
+        this.player = typedMerge(this.player, { usingSpecialAttack: false });
+      } else if (eq.weapon.name === 'Dragon claws') {
+        // stance still matters for accurate / aggressive, but it's always slash
+        this.player = typedMerge(this.player, { style: { type: 'slash' } });
+      }
     }
 
     if (this.player.style.stance !== 'Manual Cast' && ammoApplicability(eq.weapon?.id, eq.ammo?.id) === AmmoApplicability.INVALID) {

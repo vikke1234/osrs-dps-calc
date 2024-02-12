@@ -2,7 +2,7 @@ import { Player, PlayerSkills } from '@/types/Player';
 import { Monster } from '@/types/Monster';
 import { scaleMonster, scaleMonsterHpOnly } from '@/lib/MonsterScaling';
 import { max } from 'd3-array';
-import { keys } from '@/utils';
+import { keys, typedMerge } from '@/utils';
 import { CalcOpts } from '@/lib/BaseCalc';
 import { PartialDeep } from 'type-fest';
 import merge from 'lodash.mergewith';
@@ -10,8 +10,6 @@ import PlayerVsNPCCalc from '@/lib/PlayerVsNPCCalc';
 import NPCVsPlayerCalc from '@/lib/NPCVsPlayerCalc';
 import { ChartAnnotation, ChartEntry } from '@/types/State';
 import { DPS_PRECISION } from '@/lib/constants';
-
-const typedMerge = <T, E = PartialDeep<T>>(base: T, updates: E): T => merge(base, updates);
 
 export enum CompareXAxis {
   MONSTER_DEF,

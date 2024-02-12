@@ -76,6 +76,7 @@ export interface EquipmentStats {
 export interface Player extends EquipmentStats {
   name: string;
   style: PlayerCombatStyle;
+  usingSpecialAttack: boolean;
   /**
    * The player's base skill levels. These are their skill levels before any boosts (for example, from potions)
    * are applied.
